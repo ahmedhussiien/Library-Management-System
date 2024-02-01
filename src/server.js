@@ -1,12 +1,19 @@
 import chalk from 'chalk';
 
-import app from './app.js';
 import Config from './config.js';
 import logger from './logger.js';
 import initDatabase from './db/database.js';
+import App from './api/app.js';
 
-initDatabase();
+async function startServer() {
+  const db = await initDatabase();
+  const app = new App(db);
 
-const server = app.listen(Config.PORT, () => {
-  logger.info(`App running on port ${chalk.greenBright(Config.PORT)}...`);
-});
+  const server = app.app.listen(Config.PORT, () => {
+    logger.info(`App running on port ${chalk.greenBright(Config.PORT)}...`);
+  });
+
+  return server;
+}
+
+startServer();
