@@ -1,14 +1,22 @@
-import createUserModel from './models/user.model.js';
 import { Sequelize, DataTypes } from 'sequelize';
 
 import logger from '../logger.js';
 import Config from '../config.js';
+
+import createUserModel from './models/user.model.js';
+import createBookModel from './models/book.model.js';
+import createBookLoanModel from './models/bookLoan.model.js';
+import createBookAuthorModel from './models/bookAuthor.model.js';
 
 async function initDatabase() {
   const sequelize = initSequelize();
   await checkDatabaseConnection(sequelize);
 
   const models = await initSequelizeModels(sequelize);
+
+  if (Config.DB_SYNC) {
+    await sequelize.sync();
+  }
 
   const db = {
     sequelize,
@@ -43,12 +51,26 @@ async function checkDatabaseConnection(sequelize) {
 }
 
 async function initSequelizeModels(sequelize) {
-  const modelsConstructors = [createUserModel];
+  const modelsConstructors = [
+    createUserModel,
+    createBookAuthorModel,
+    createBookModel,
+    createBookLoanModel,
+  ];
+
   const models = {};
 
+  // create models
   modelsConstructors.forEach((modelConstructor) => {
     const model = modelConstructor(sequelize, DataTypes);
     models[model.name] = model;
+  });
+
+  // set associations
+  Object.keys(models).forEach((modelName) => {
+    if (models[modelName].associate) {
+      models[modelName].associate(models);
+    }
   });
 
   return models;
