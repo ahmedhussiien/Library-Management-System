@@ -14,7 +14,11 @@ function createBookAuthorModel(sequelize, DataTypes) {
         primaryKey: true,
         autoIncrement: true,
       },
-      name: { type: DataTypes.STRING, allowNull: false },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: { notNull: true, len: [2, 128] },
+      },
     },
     {
       tableName: 'book_author',

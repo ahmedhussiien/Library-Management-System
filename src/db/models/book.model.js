@@ -21,20 +21,49 @@ function createBookModel(sequelize, DataTypes) {
           model: 'book_author',
           key: 'id',
         },
+        validate: {
+          notNull: true,
+          isInt: true,
+        },
       },
-      title: { type: DataTypes.STRING, allowNull: false },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: true,
+          notEmpty: true,
+          len: [2, 128],
+        },
+      },
       ISBN: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
         field: 'isbn',
+        validate: {
+          notNull: true,
+          len: [13, 13], // ISBN are 13-digits long.
+        },
       },
       availableQuantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
+        validate: {
+          notNull: true,
+          isInt: true,
+          min: 0,
+        },
       },
-      shelfNumber: { type: DataTypes.INTEGER, allowNull: false },
+      shelfNumber: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notNull: true,
+          isInt: true,
+          min: 0,
+        },
+      },
     },
     {
       tableName: 'book',
