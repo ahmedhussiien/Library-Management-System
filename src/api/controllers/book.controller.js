@@ -2,7 +2,8 @@ import httpStatus from '../utils/httpStatus.js';
 import * as bookService from '../../services/book.service.js';
 
 async function getAll(req, res) {
-  const result = await bookService.findAll();
+  const { query } = req;
+  const result = await bookService.findAll(query);
   res.status(httpStatus.OK).send(result);
 }
 

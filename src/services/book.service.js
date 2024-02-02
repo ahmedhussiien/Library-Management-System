@@ -4,11 +4,21 @@ const { assign, omit } = _;
 import db from '../db/database.js';
 import NotFoundError from '../utils/exceptions/notFoundError.js';
 import BadRequestError from '../utils/exceptions/badRequestError.js';
+import { getPaginationInfo, getPagingData } from '../utils/paginationHelper.js';
 
 const { Book } = db;
 
-async function findAll() {
-  return Book.findAll();
+async function findAll(query) {
+  // search with params
+  const { title, authorName, ISBN } = query;
+
+  // set pagination
+  const { limit, offset, page } = getPaginationInfo(query.page, query.limit);
+  const data = await Book.findAndCountAll({ limit, offset });
+
+  // format response
+  const result = getPagingData(data, page, limit);
+  return result;
 }
 
 async function findOne(id) {

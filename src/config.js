@@ -17,6 +17,7 @@ const Config = {
   ACCESS_TOKEN_COOKIE_NAME: 'AX_TKN',
 
   PASSWORD_HASH_SALT_ROUNDS: 6,
+  DEFAULT_NUM_ROWS_PER_QUERY: 10,
 };
 
 function setConfigVariablesFromEnv(Config) {

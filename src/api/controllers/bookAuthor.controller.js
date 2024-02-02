@@ -2,7 +2,8 @@ import httpStatus from '../utils/httpStatus.js';
 import * as bookAuthorService from '../../services/bookAuthor.service.js';
 
 async function getAll(req, res) {
-  const result = await bookAuthorService.findAll();
+  const { query } = req;
+  const result = await bookAuthorService.findAll(query);
   res.status(httpStatus.OK).send(result);
 }
 
