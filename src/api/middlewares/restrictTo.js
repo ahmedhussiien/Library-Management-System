@@ -1,4 +1,4 @@
-import UnauthorizedError from '../../utils/exceptions/unauthorizedError';
+import UnauthorizedError from '../../utils/exceptions/unauthorizedError.js';
 
 const restrictTo = (...roles) => {
   return (req, res, next) => {
