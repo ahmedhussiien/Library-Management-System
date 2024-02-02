@@ -4,6 +4,7 @@ import 'express-async-errors';
 import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 
 import healthRoute from './routes/health.route.js';
 import v1Routes from './routes/v1/index.js';
@@ -22,6 +23,9 @@ app.use(express.json());
 
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
+
+// parse cookies
+app.use(cookieParser());
 
 // enable cors
 app.use(cors());

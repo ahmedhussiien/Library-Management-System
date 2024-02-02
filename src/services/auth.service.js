@@ -41,7 +41,7 @@ async function isCorrectPassword(candidatePassword, password) {
   return await compare(candidatePassword, password);
 }
 
-async function getAccessToken(user) {
+function getAccessToken(user) {
   const expiresIn = moment(new Date()).add(
     Config.ACCESS_TOKEN_EXPIRES_IN_MINUTES,
     'minutes',
@@ -54,7 +54,11 @@ async function getAccessToken(user) {
   };
 
   const token = jwt.sign(payload, Config.ACCESS_TOKEN_SECRET);
-  return token;
+
+  return {
+    token,
+    expiresIn: expiresIn.toDate(),
+  };
 }
 
 async function protect(accessToken) {

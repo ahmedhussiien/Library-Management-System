@@ -1,23 +1,18 @@
-import Config from '../../config';
-import UnauthenticatedError from '../../utils/exceptions/unauthenticatedError';
+import Config from '../../config.js';
+import UnauthenticatedError from '../../utils/exceptions/unauthenticatedError.js';
 
-import * as authService from '../../services/auth.service'
+import * as authService from '../../services/auth.service.js';
 
-const protect = (req, res, next) => {
-    let token;
+const protect = async (req, res, next) => {
+  let token;
 
-    if (
-      req.cookies &&
-      req.cookies[Config.ACCESS_TOKEN_COOKIE_NAME]
-    )
-      token = req.cookies[Config.ACCESS_TOKEN_COOKIE_NAME]
+  if (req.cookies && req.cookies[Config.ACCESS_TOKEN_COOKIE_NAME])
+    token = req.cookies[Config.ACCESS_TOKEN_COOKIE_NAME];
+  else throw new UnauthenticatedError('_MissingCredentials');
 
-    else throw new UnauthenticatedError('_MissingCredentials');
-
-    const payload = authService.protect(token);
-    req.session = payload;
-    next();
-  }
-);
+  const payload = await authService.protect(token);
+  req.session = payload;
+  next();
+};
 
 export default protect;

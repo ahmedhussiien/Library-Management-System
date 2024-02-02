@@ -30,13 +30,12 @@ async function login(req, res) {
 
   const userData = await authService.login(email, password);
 
-  res.cookie(
-    Config.ACCESS_TOKEN_COOKIE_NAME,
-    userData.accessToken,
+  res.cookie(Config.ACCESS_TOKEN_COOKIE_NAME, userData.accessToken.token, {
     ...defaultCookieOptions,
-  );
+    expires: userData.accessToken.expiresIn,
+  });
 
-  res.status(httpStatus.OK).send(userData);
+  res.status(httpStatus.OK).send(userData.user);
 }
 
 export { login, logout };
