@@ -4,12 +4,17 @@ import logger from './logger.js';
 const Config = {
   PORT: 3000,
   NODE_ENV: 'prod',
+
   DB_NAME: 'library',
   DB_USER: '',
   DB_PASSWORD: '',
   DB_HOST: 'localhost',
   DB_PORT: 3306,
   DB_SYNC: false,
+
+  ACCESS_TOKEN_SECRET: '',
+  ACCESS_TOKEN_EXPIRES_IN_MINUTES: 10,
+  ACCESS_TOKEN_COOKIE_NAME: 'AX_TKN',
 };
 
 function setConfigVariablesFromEnv(Config) {

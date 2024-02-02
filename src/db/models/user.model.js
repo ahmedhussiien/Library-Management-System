@@ -23,6 +23,10 @@ function createUserModel(sequelize, DataTypes) {
       },
       firstName: { type: DataTypes.STRING, allowNull: false },
       lastName: { type: DataTypes.STRING, allowNull: false },
+      role: {
+        type: DataTypes.ENUM('borrower', 'supervisor'),
+        allowNull: false,
+      },
     },
     {
       tableName: 'user',
