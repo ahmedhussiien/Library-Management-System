@@ -15,6 +15,8 @@ const Config = {
   ACCESS_TOKEN_SECRET: '',
   ACCESS_TOKEN_EXPIRES_IN_MINUTES: 10,
   ACCESS_TOKEN_COOKIE_NAME: 'AX_TKN',
+
+  PASSWORD_HASH_SALT_ROUNDS: 6,
 };
 
 function setConfigVariablesFromEnv(Config) {
