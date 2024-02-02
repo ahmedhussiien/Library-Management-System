@@ -76,4 +76,5 @@ async function initSequelizeModels(sequelize) {
   return models;
 }
 
-export default initDatabase;
+const db = await initDatabase();
+export default db;

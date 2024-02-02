@@ -1,4 +1,4 @@
-const HttpStatus = {
+const httpStatus = {
   OK: 200,
   CREATED: 201,
   NO_CONTENT: 204,
@@ -14,4 +14,4 @@ const HttpStatus = {
   SERVICE_UNAVAILABLE: 503,
 };
 
-export default HttpStatus;
+export default httpStatus;

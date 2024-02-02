@@ -1,26 +1,13 @@
-import { Router } from 'express';
-import HttpStatus from '../../utils/httpStatus.js';
+import httpStatus from '../utils/httpStatus.js';
 
-class HealthController {
-  router = Router();
+async function getHealth(req, res) {
+  const data = {
+    message: 'Ok',
+    uptime: process.uptime(),
+    date: new Date(),
+  };
 
-  constructor() {
-    this.initializeRoutes();
-  }
-
-  initializeRoutes() {
-    this.router.get('/', this.getStatus);
-  }
-
-  async getStatus(req, res) {
-    const data = {
-      message: 'Ok',
-      uptime: process.uptime(),
-      date: new Date(),
-    };
-
-    res.status(HttpStatus.OK).send(data);
-  }
+  res.status(httpStatus.OK).send(data);
 }
 
-export default HealthController;
+export { getHealth };

@@ -1,48 +1,20 @@
 import express from 'express';
-import routes from './controllers/index.js';
 
-import BookService from '../services/book/book.service.js';
+import healthRoute from './routes/health.route.js';
+import v1Routes from './routes/v1/index.js';
 
-const { v1Routers, HealthController } = routes;
-const { BookController } = v1Routers;
+const app = express();
 
-class App {
-  app = express();
-  API_PREFIX = '/api/v1';
+// parse json request body
+app.use(express.json());
 
-  constructor(db) {
-    this.db = db;
-    this.initializeExpressApp();
-    this.initializeV1Routes(db);
-  }
+// parse urlencoded request body
+app.use(express.urlencoded({ extended: true }));
 
-  initializeExpressApp() {
-    // parse json request body
-    this.app.use(express.json());
+// health route
+app.use('/health', healthRoute);
 
-    // parse urlencoded request body
-    this.app.use(express.urlencoded({ extended: true }));
-  }
+// v1 routes
+app.use('/v1', v1Routes);
 
-  initializeV1Routes(db) {
-    this.initializeHealthRoute();
-    this.initializeV1BookRoute(db);
-  }
-
-  initializeHealthRoute() {
-    const controller = new HealthController();
-    this.setRouter('health', controller.router);
-  }
-
-  initializeV1BookRoute(db) {
-    const service = new BookService(db);
-    const controller = new BookController(service);
-    this.setRouter('books', controller.getRouter());
-  }
-
-  setRouter(path, router) {
-    this.app.use(`${this.API_PREFIX}/${path}`, router);
-  }
-}
-
-export default App;
+export default app;
