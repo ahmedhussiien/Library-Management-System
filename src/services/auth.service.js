@@ -15,7 +15,7 @@ async function login(email, password) {
     throw new UnauthenticatedError('_MissingCredentials');
 
   // get user
-  const user = await User.findOne({ where: { email } });
+  const user = await User.scope('withPassword').findOne({ where: { email } });
   if (!user) throw new NotFoundError('_UserNotFound');
 
   // check for password

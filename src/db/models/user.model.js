@@ -1,3 +1,5 @@
+import userRoles from '../enums/userRoles.js';
+
 /**
  * Model class for "User"
  * @param {Sequelize} sequelize - sequelize object
@@ -14,24 +16,55 @@ function createUserModel(sequelize, DataTypes) {
         primaryKey: true,
         autoIncrement: true,
       },
-      password: { type: DataTypes.STRING, allowNull: false },
-      email: { type: DataTypes.STRING, allowNull: false, unique: true },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: { len: [8, 64] },
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: { isEmail: true },
+      },
       isActive: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true,
       },
-      firstName: { type: DataTypes.STRING, allowNull: false },
-      lastName: { type: DataTypes.STRING, allowNull: false },
-      role: {
-        type: DataTypes.ENUM('borrower', 'supervisor'),
+      firstName: {
+        type: DataTypes.STRING,
         allowNull: false,
+        validate: { notEmpty: true },
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: { notEmpty: true },
+      },
+      role: {
+        type: DataTypes.ENUM(...Object.values(userRoles)),
+        allowNull: false,
+        validate: {
+          isIn: [Object.values(userRoles)],
+        },
       },
     },
     {
       tableName: 'user',
       underscored: true,
-      timestamps: true, // adds the `createdAt` and `updatedAt` attributes
+      timestamps: true, // adds the `createdAt` and `updatedAt` attributes,
+      defaultScope: {
+        attributes: {
+          exclude: ['password'], // exclude password by default.
+        },
+        order: [['id', 'DESC']],
+      },
+      scopes: {
+        withPassword: {
+          attributes: {},
+        },
+      },
     },
   );
 

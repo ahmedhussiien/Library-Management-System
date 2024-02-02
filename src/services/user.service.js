@@ -1,5 +1,8 @@
 import { hash } from 'bcrypt';
 
+import _ from 'lodash';
+const { assign, pick } = _;
+
 import db from '../db/database.js';
 import Config from '../config.js';
 
@@ -12,7 +15,7 @@ async function signup(data) {
     email: data.email,
     firstName: data.firstName,
     lastName: data.lastName,
-    role: data.role,
+    role: User.userRoles.BORROWER,
     password: hashedPassword,
   });
 
@@ -24,4 +27,25 @@ async function hashPassword(password) {
   return hash(password, Config.PASSWORD_HASH_SALT_ROUNDS);
 }
 
-export { signup };
+async function updateOne(id, data) {
+  if (!id) throw new BadRequestError('_ProvideId');
+
+  const user = await User.findOne({ where: { id } });
+  if (!user) throw new NotFoundError('_UserNotfound');
+
+  data = pick(data, ['email', 'firstName', 'lastName', 'password']);
+  assign(user, data);
+
+  return user.save();
+}
+
+async function findOne(id) {
+  if (!id) throw new BadRequestError('_ProvideId');
+
+  const user = await User.findOne({ where: { id } });
+  if (!user) throw new NotFoundError('_UserNotfound');
+
+  return user;
+}
+
+export { signup, updateOne, findOne };
