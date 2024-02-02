@@ -16,7 +16,7 @@ async function updateMe(req, res) {
 
 async function getMe(req, res) {
   const id = req.session.userId;
-  const result = await userService.getOne(id);
+  const result = await userService.findOne(id);
   res.status(httpStatus.OK).send(result);
 }
 

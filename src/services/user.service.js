@@ -5,6 +5,7 @@ const { assign, pick } = _;
 
 import db from '../db/database.js';
 import Config from '../config.js';
+import userRoles from '../db/enums/userRoles.js';
 
 const { User } = db;
 
@@ -15,7 +16,7 @@ async function signup(data) {
     email: data.email,
     firstName: data.firstName,
     lastName: data.lastName,
-    role: User.userRoles.BORROWER,
+    role: userRoles.BORROWER,
     password: hashedPassword,
   });
 
@@ -33,10 +34,17 @@ async function updateOne(id, data) {
   const user = await User.findOne({ where: { id } });
   if (!user) throw new NotFoundError('_UserNotfound');
 
+  // filter data
   data = pick(data, ['email', 'firstName', 'lastName', 'password']);
-  assign(user, data);
 
-  return user.save();
+  // hash password
+  if (data.password) data.password = await hashPassword(data.password);
+
+  assign(user, data);
+  await user.save();
+
+  user.password = undefined;
+  return user;
 }
 
 async function findOne(id) {
