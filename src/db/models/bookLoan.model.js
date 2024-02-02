@@ -21,6 +21,10 @@ function createBookLoanModel(sequelize, DataTypes) {
           model: 'user',
           key: 'id',
         },
+        validate: {
+          notNull: true,
+          isInt: true,
+        },
       },
       bookId: {
         type: DataTypes.INTEGER,
@@ -29,18 +33,33 @@ function createBookLoanModel(sequelize, DataTypes) {
           model: 'book',
           key: 'id',
         },
+        validate: {
+          notNull: true,
+          isInt: true,
+        },
       },
       checkOutDate: {
         type: DataTypes.DATE,
         allowNull: false,
+        validate: {
+          isDate: true,
+          notNull: true,
+        },
       },
       checkInDate: {
         type: DataTypes.DATE,
         allowNull: false,
+        validate: {
+          isDate: true,
+        },
       },
       dueDate: {
         type: DataTypes.DATE,
         allowNull: false,
+        validate: {
+          isDate: true,
+          notNull: true,
+        },
       },
     },
     {

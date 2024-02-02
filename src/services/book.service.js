@@ -1,4 +1,5 @@
 import { Op } from 'sequelize';
+
 import _ from 'lodash';
 const { assign, omit } = _;
 
@@ -69,7 +70,6 @@ async function updateOne(id, data) {
   if (!book) throw new NotFoundError('_BookNotfound');
 
   data = omit(data, ['id']);
-  console.log(data);
   assign(book, data);
 
   return book.save();
