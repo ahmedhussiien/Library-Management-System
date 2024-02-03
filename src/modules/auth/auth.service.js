@@ -47,7 +47,7 @@ function getAccessToken(user) {
   const payload = {
     userId: user.id,
     userRole: user.role,
-    borrowerId: user.Borrower ? user.Borrower.id : undefined,
+    borrowerId: user.borrower ? user.borrower.id : undefined,
     exp: expiresIn.unix(),
   };
 

@@ -64,6 +64,7 @@ function createBookLoanModel(sequelize, DataTypes) {
     {
       tableName: 'book_loan',
       underscored: true,
+      timestamps: false,
     },
   );
 

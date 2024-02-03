@@ -33,7 +33,7 @@ function generateBookData() {
 function generateUserData() {
   return {
     email: faker.internet.email(),
-    password: faker.internet.password(),
+    password: USER_PASSWORD,
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
   };

@@ -36,6 +36,11 @@ app.options('*', cors());
 // log requests
 app.use(morgan('dev'));
 
+app.disable('etag');
+
+// docs
+app.use('/docs', express.static('./src/docs'));
+
 // health route
 app.use('/health', healthRoute);
 
