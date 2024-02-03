@@ -13,7 +13,7 @@ ENV NODE_ENV=prod \
 
 # install dependencies
 COPY package*.json ./
-RUN npm ci --production
+RUN npm ci --omit=dev
 
 # copy files to the app directory
 COPY . .
