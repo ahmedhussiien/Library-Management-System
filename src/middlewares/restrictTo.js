@@ -1,5 +1,5 @@
 import UnauthorizedError from '../utils/exceptions/unauthorizedError.js';
-import { userRoles } from '../modules/user/index.js';
+import { userRoles } from '../modules/user/user.enum.js';
 
 const restrictTo = (...roles) => {
   return (req, res, next) => {

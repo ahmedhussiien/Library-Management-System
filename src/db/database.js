@@ -7,6 +7,7 @@ import createUserModel from '../modules/user/user.model.js';
 import createBookModel from '../modules/book/book.model.js';
 import createBookLoanModel from '../modules/bookLoan/bookLoan.model.js';
 import createBookAuthorModel from '../modules/bookAuthor/bookAuthor.model.js';
+import createBorrowerModel from '../modules/borrower/borrower.model.js';
 
 async function initDatabase() {
   const sequelize = initSequelize();
@@ -55,6 +56,7 @@ async function initSequelizeModels(sequelize) {
     createUserModel,
     createBookAuthorModel,
     createBookModel,
+    createBorrowerModel,
     createBookLoanModel,
   ];
 

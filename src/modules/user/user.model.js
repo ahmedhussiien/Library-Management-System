@@ -69,7 +69,7 @@ function createUserModel(sequelize, DataTypes) {
   );
 
   User.associate = (models) => {
-    models.User.hasMany(models.BookLoan, {
+    models.User.hasOne(models.Borrower, {
       foreignKey: 'userId',
       targetId: 'id',
     });

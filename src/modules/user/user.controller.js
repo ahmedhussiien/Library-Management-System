@@ -20,4 +20,23 @@ async function getMe(req, res) {
   res.status(httpStatus.OK).send(result);
 }
 
-export { signup, updateMe, getMe };
+async function updateOne(req, res) {
+  const data = req.body;
+  const { userId } = req.params;
+  const result = await userService.updateOneByStaff(userId, data);
+  res.status(httpStatus.OK).send(result);
+}
+
+async function getOne(req, res) {
+  const { userId } = req.params;
+  const result = await userService.findOne(userId);
+  res.status(httpStatus.OK).send(result);
+}
+
+async function deleteOne(req, res) {
+  const { userId } = req.params;
+  await userService.deleteOne(userId);
+  res.sendStatus(httpStatus.NO_CONTENT);
+}
+
+export { signup, updateMe, getMe, deleteOne, updateOne, getOne };

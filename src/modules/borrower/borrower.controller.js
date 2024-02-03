@@ -13,18 +13,4 @@ async function getOne(req, res) {
   res.status(httpStatus.OK).send(result);
 }
 
-async function deleteOne(req, res) {
-  const { borrowerId } = req.params;
-  await borrowerService.deleteOne(borrowerId);
-  res.sendStatus(httpStatus.NO_CONTENT);
-}
-
-async function updateOne(req, res) {
-  const { borrowerId } = req.params;
-  const data = req.body;
-
-  const result = await borrowerService.updateOne(borrowerId, data);
-  res.status(httpStatus.OK).send(result);
-}
-
-export { getAll, getOne, deleteOne, updateOne };
+export { getAll, getOne };

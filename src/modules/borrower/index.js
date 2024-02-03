@@ -1,2 +1,4 @@
 import borrowerRoute from './borrower.route.js';
-export { borrowerRoute };
+import * as borrowerService from './borrower.service.js';
+
+export { borrowerRoute, borrowerService };

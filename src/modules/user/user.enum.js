@@ -1,3 +1,3 @@
-const userRoles = { BORROWER: 'borrower', SUPERVISOR: 'supervisor' };
+const userRoles = { BORROWER: 'borrower', STAFF: 'staff' };
 
 export { userRoles };

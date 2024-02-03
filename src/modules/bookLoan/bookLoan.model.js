@@ -14,11 +14,11 @@ function createBookLoanModel(sequelize, DataTypes) {
         primaryKey: true,
         autoIncrement: true,
       },
-      userId: {
+      borrowerId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'user',
+          model: 'borrower',
           key: 'id',
         },
         validate: {
@@ -74,8 +74,8 @@ function createBookLoanModel(sequelize, DataTypes) {
       targetId: 'id',
     });
 
-    models.BookLoan.belongsTo(models.User, {
-      foreignKey: 'userId',
+    models.BookLoan.belongsTo(models.Borrower, {
+      foreignKey: 'borrowerId',
       targetId: 'id',
     });
   };

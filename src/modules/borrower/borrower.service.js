@@ -2,16 +2,16 @@ import _ from 'lodash';
 const { assign, pick } = _;
 
 import db from '../../db/database.js';
-import { userRoles } from '../user/index.js';
 import NotFoundError from '../../utils/exceptions/notFoundError.js';
 import BadRequestError from '../../utils/exceptions/badRequestError.js';
+import { userRoles } from '../user/user.enum.js';
 
 import {
   getPaginationInfo,
   getPagingData,
 } from '../../utils/paginationHelper.js';
 
-const { User } = db;
+const { Borrower, User } = db;
 
 async function findAll(query) {
   // set pagination
@@ -19,6 +19,7 @@ async function findAll(query) {
 
   const data = await User.findAndCountAll({
     where: { role: userRoles.BORROWER },
+    includes: [User],
     limit,
     offset,
   });
@@ -31,10 +32,18 @@ async function findAll(query) {
 async function findOne(id) {
   if (!id) throw new BadRequestError('_ProvideId');
 
-  const user = await User.findOne({ where: { id, role: userRoles.BORROWER } });
+  const user = await User.findOne({
+    where: { id, role: userRoles.BORROWER },
+    includes: [User],
+  });
+
   if (!user) throw new NotFoundError('_UserNotfound');
 
   return user;
+}
+
+async function createOne(data, transaction) {
+  return Borrower.create(data, { transaction });
 }
 
 async function updateOne(id, data) {
@@ -56,10 +65,10 @@ async function deleteOne(id) {
 
   // TODO: check if borrower has any loans: soft delete
 
-  const user = await User.destroy({ where: { id, role: userRoles.BORROWER } });
+  const user = await User.destroy({ where: { id } });
   if (!user) throw new NotFoundError('_UserNotfound');
 
   return user;
 }
 
-export { findAll, findOne, updateOne, deleteOne };
+export { findAll, findOne, updateOne, createOne, deleteOne };

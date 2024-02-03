@@ -10,11 +10,7 @@ const router = express.Router();
 router
   .route('/')
   .get(bookAuthorController.getAll)
-  .post(
-    protect,
-    restrictTo(userRoles.SUPERVISOR),
-    bookAuthorController.createOne,
-  );
+  .post(protect, restrictTo(userRoles.STAFF), bookAuthorController.createOne);
 
 router.route('/:authorId').get(bookAuthorController.getOne);
 
