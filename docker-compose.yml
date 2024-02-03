@@ -9,12 +9,50 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - '${DB_PORT}:${DB_PORT}'
     expose:
       - '${DB_PORT}'
     volumes:
       - db-data:/var/lib/mysql
+
+  seed-db:
+    image: ghcr.io/ahmedhussiien/library-management-api:latest
+    environment:
+      PORT: ${PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}  
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_SYNC: 1
+      NODE_ENV: ${NODE_ENV}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      ACCESS_TOKEN_EXPIRES_IN_MINUTES: ${ACCESS_TOKEN_EXPIRES_IN_MINUTES}
+    entrypoint: ["npm", "run", "seed"]
+    depends_on:
+      db:
+        condition: service_started
+
+  api:
+    image: ghcr.io/ahmedhussiien/library-management-api:latest
+    restart: unless-stopped
+    environment:
+      PORT: ${PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}  
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_SYNC: 0
+      NODE_ENV: ${NODE_ENV}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      ACCESS_TOKEN_EXPIRES_IN_MINUTES: ${ACCESS_TOKEN_EXPIRES_IN_MINUTES}
+    ports:
+      - '${PORT}:${PORT}'
+    expose:
+      - '${PORT}'
+    depends_on:
+        seed-db:
+            condition: service_completed_successfully
 
 volumes:
   db-data:
