@@ -25,7 +25,7 @@ jobs:
     - name: Construct Tags
       id: tags
       run: |
-        sha_short=$(echo ${{ inputs.commit-sha }} | head -c 7 )
+        sha_short=$(echo ${{ github.sha }} | head -c 7 )
 
         image_latest_tag=ghcr.io/${{ github.repository_owner }}/${{env.IMAGE_NAME}}:latest
         image_commit_tag=ghcr.io/${{ github.repository_owner }}/${{env.IMAGE_NAME}}:${sha_short}
