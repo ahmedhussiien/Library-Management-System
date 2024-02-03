@@ -19,7 +19,7 @@ async function findAll(query) {
 
   const data = await User.findAndCountAll({
     where: { role: userRoles.BORROWER },
-    includes: [User],
+    include: [User],
     limit,
     offset,
   });
@@ -34,7 +34,7 @@ async function findOne(id) {
 
   const user = await User.findOne({
     where: { id, role: userRoles.BORROWER },
-    includes: [User],
+    include: [User],
   });
 
   if (!user) throw new NotFoundError('_UserNotfound');
@@ -46,16 +46,16 @@ async function createOne(data, transaction) {
   return Borrower.create(data, { transaction });
 }
 
-async function updateOne(id, data) {
-  if (!id) throw new BadRequestError('_ProvideId');
+async function updateOneByUserId(userId, data, transaction) {
+  if (!userId) throw new BadRequestError('_ProvideId');
 
-  const user = await User.findOne({ where: { id, role: userRoles.BORROWER } });
-  if (!user) throw new NotFoundError('_UserNotfound');
+  const borrower = await Borrower.findOne({ where: { userId }, transaction });
+  if (!borrower) throw new NotFoundError('_BorrowerNotfound');
 
-  data = pick(data, ['email', 'firstName', 'lastName', 'isActive']);
-  assign(user, data);
+  data = pick(data, ['contactNumber']);
+  assign(borrower, data);
 
-  return user.save();
+  return borrower.save({ transaction });
 }
 
 async function deleteOne(id) {
@@ -65,10 +65,10 @@ async function deleteOne(id) {
 
   // TODO: check if borrower has any loans: soft delete
 
-  const user = await User.destroy({ where: { id } });
-  if (!user) throw new NotFoundError('_UserNotfound');
+  const borrower = await Borrower.destroy({ where: { id } });
+  if (!borrower) throw new NotFoundError('_BorrowerNotfound');
 
-  return user;
+  return borrower;
 }
 
-export { findAll, findOne, updateOne, createOne, deleteOne };
+export { findAll, findOne, createOne, deleteOne, updateOneByUserId };

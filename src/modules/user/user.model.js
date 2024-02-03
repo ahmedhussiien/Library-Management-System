@@ -69,10 +69,7 @@ function createUserModel(sequelize, DataTypes) {
   );
 
   User.associate = (models) => {
-    models.User.hasOne(models.Borrower, {
-      foreignKey: 'userId',
-      targetId: 'id',
-    });
+    models.User.hasOne(models.Borrower);
   };
 
   return User;

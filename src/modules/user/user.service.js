@@ -12,7 +12,7 @@ import BadRequestError from '../../utils/exceptions/badRequestError.js';
 
 import * as borrowerService from '../borrower/borrower.service.js';
 
-const { User, sequelize } = db;
+const { User, Borrower, sequelize } = db;
 
 async function signup(data) {
   if (!data.borrower) throw new BadRequestError('_ProvideBorrowerInfo');
@@ -48,43 +48,10 @@ async function hashPassword(password) {
   return hash(password, Config.PASSWORD_HASH_SALT_ROUNDS);
 }
 
-async function updateOne(id, data) {
-  if (!id) throw new BadRequestError('_ProvideId');
-
-  const user = await User.findOne({ where: { id } });
-  if (!user) throw new NotFoundError('_UserNotfound');
-
-  // filter data
-  data = pick(data, ['email', 'firstName', 'lastName', 'password']);
-
-  // hash password
-  if (data.password) data.password = await hashPassword(data.password);
-
-  assign(user, data);
-  await user.save();
-
-  user.password = undefined;
-  return user;
-}
-
-async function updateOneByStaff(id, data) {
-  if (!id) throw new BadRequestError('_ProvideId');
-
-  const user = await User.findOne({ where: { id, role: userRoles.BORROWER } });
-  if (!user) throw new NotFoundError('_UserNotfound');
-
-  data = pick(data, ['email', 'firstName', 'lastName', 'isActive']);
-  assign(user, data);
-
-  // TODO: check for borrower entity
-
-  return user.save();
-}
-
 async function findOne(id) {
   if (!id) throw new BadRequestError('_ProvideId');
 
-  const user = await User.findOne({ where: { id } });
+  const user = await User.findOne({ where: { id }, include: [Borrower] });
   if (!user) throw new NotFoundError('_UserNotfound');
 
   return user;
@@ -93,8 +60,82 @@ async function findOne(id) {
 async function findOneIncludePassword(email) {
   if (!email) throw new BadRequestError('_ProvideEmail');
 
-  const user = User.scope('withPassword').findOne({ where: { email } });
+  const user = User.scope('withPassword').findOne({
+    where: { email },
+    include: [Borrower],
+  });
   if (!user) throw new NotFoundError('_UserNotfound');
+
+  return user;
+}
+
+async function updateOne(id, data) {
+  if (!id) throw new BadRequestError('_ProvideId');
+  if (!data.borrower) throw new BadRequestError('_ProvideBorrowerInfo');
+  if (!data.user) throw new BadRequestError('_ProvideUserInfo');
+
+  const user = await sequelize.transaction(async (t) => {
+    const user = await User.findOne({ where: { id }, transaction: t });
+    if (!user) throw new NotFoundError('_UserNotfound');
+
+    // filter data
+    const userData = pick(data.user, [
+      'email',
+      'firstName',
+      'lastName',
+      'password',
+    ]);
+
+    // hash password
+    if (userData.password)
+      userData.password = await hashPassword(userData.password);
+
+    assign(user, userData);
+    await user.save({ transaction: t });
+
+    // update borrower data
+    if (user.role === userRoles.BORROWER) {
+      await borrowerService.updateOneByUserId(id, data.borrower, t);
+    }
+
+    return user;
+  });
+
+  user.password = undefined;
+  return user;
+}
+
+async function updateOneByStaff(id, data) {
+  if (!id) throw new BadRequestError('_ProvideId');
+  if (!data.borrower) throw new BadRequestError('_ProvideBorrowerInfo');
+  if (!data.user) throw new BadRequestError('_ProvideUserInfo');
+
+  const user = await sequelize.transaction(async (t) => {
+    const user = await User.findOne({
+      where: { id },
+      transaction: t,
+    });
+
+    if (!user) throw new NotFoundError('_UserNotfound');
+
+    // filter data
+    const userData = pick(data.user, [
+      'email',
+      'firstName',
+      'lastName',
+      'isActive',
+    ]);
+
+    assign(user, userData);
+    user.save({ transaction: t });
+
+    // update borrower data
+    if (user.role === userRoles.BORROWER) {
+      await borrowerService.updateOneByUserId(id, data.borrower, t);
+    }
+
+    return user;
+  });
 
   return user;
 }
@@ -102,12 +143,10 @@ async function findOneIncludePassword(email) {
 async function deleteOne(id) {
   if (!id) throw new BadRequestError('_ProvideId');
 
-  // TODO: check if borrower has active loans: throw an error
-
-  // TODO: check if borrower has any loans: soft delete
-
   const user = await User.destroy({ where: { id } });
   if (!user) throw new NotFoundError('_UserNotfound');
+
+  // TODO: delete borrower entity
 
   return user;
 }

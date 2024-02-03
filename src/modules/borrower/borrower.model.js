@@ -44,7 +44,10 @@ function createBorrowerModel(sequelize, DataTypes) {
   );
 
   Borrower.associate = (models) => {
-    models.Borrower.belongsTo(models.User);
+    models.Borrower.belongsTo(models.User, {
+      foreignKey: 'userId',
+      targetId: 'id',
+    });
 
     models.Borrower.hasMany(models.BookLoan, {
       foreignKey: 'borrowerId',
