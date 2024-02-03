@@ -3,10 +3,10 @@ import { Sequelize, DataTypes } from 'sequelize';
 import logger from '../logger.js';
 import Config from '../config.js';
 
-import createUserModel from './models/user.model.js';
-import createBookModel from './models/book.model.js';
-import createBookLoanModel from './models/bookLoan.model.js';
-import createBookAuthorModel from './models/bookAuthor.model.js';
+import createUserModel from '../modules/user/user.model.js';
+import createBookModel from '../modules/book/book.model.js';
+import createBookLoanModel from '../modules/bookLoan/bookLoan.model.js';
+import createBookAuthorModel from '../modules/bookAuthor/bookAuthor.model.js';
 
 async function initDatabase() {
   const sequelize = initSequelize();

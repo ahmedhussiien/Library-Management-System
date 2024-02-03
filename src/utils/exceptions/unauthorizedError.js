@@ -1,4 +1,4 @@
-import httpStatus from '../../api/utils/httpStatus.js';
+import httpStatus from '../httpStatus.js';
 import AppError from './appError.js';
 
 export default class UnauthorizedError extends AppError {
