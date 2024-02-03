@@ -35,7 +35,7 @@ const router = express.Router();
  */
 
 /**
- * @api {post} /users/signup Sign Up New User
+ * @api {post} /users/signup Sign up a new User
  * @apiName SignUp
  * @apiGroup User
  *
@@ -57,7 +57,7 @@ router.route('/signup').post(userController.signup);
 router
   .route('/me')
   /**
-   * @api {get} /users/me Get Current User information
+   * @api {get} /users/me Get Current User data
    * @apiName GetMe
    * @apiGroup User
    *
@@ -67,7 +67,7 @@ router
   .get(protect, userController.getMe)
 
   /**
-   * @api {patch} /users/me Update Current User information
+   * @api {patch} /users/me Update Current User data
    * @apiName UpdateMe
    * @apiGroup User
    *
@@ -90,8 +90,8 @@ router
 router
   .route('/:userId')
   /**
-   * @api {get} /users/:userId Get User information
-   * @apiParam {Number} userId Users unique ID.
+   * @api {get} /users/:id Get User data
+   * @apiParam {Number} id Users unique ID.
    * @apiName GetUser
    * @apiGroup User
    *
@@ -103,8 +103,8 @@ router
   .get(protect, restrictTo(userRoles.STAFF), userController.getOne)
 
   /**
-   * @api {patch} /users/:userId Update User information
-   * @apiParam {Number} userId Users unique ID.
+   * @api {patch} /users/:id Update User data
+   * @apiParam {Number} id Users unique ID.
    * @apiName UpdateUser
    * @apiGroup User
    *
@@ -127,8 +127,8 @@ router
   .patch(protect, restrictTo(userRoles.STAFF), userController.updateOne)
 
   /**
-   * @api {delete} /users/:userId Delete user
-   * @apiParam {Number} userId Users unique ID.
+   * @api {delete} /users/:id Delete user
+   * @apiParam {Number} id Users unique ID.
    * @apiName DeleteUser
    * @apiGroup User
    *
