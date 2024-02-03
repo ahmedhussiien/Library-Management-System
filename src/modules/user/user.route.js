@@ -6,8 +6,6 @@ import { restrictTo, userRoles } from '../../middlewares/restrictTo.js';
 
 const router = express.Router();
 
-router.route('/signup').post(userController.signup);
-
 /**
  * @apiDefine UserSuccess
  *
@@ -35,6 +33,26 @@ router.route('/signup').post(userController.signup);
  *         "updatedAt": "2024-02-03T07:54:29.000Z"
  *     }
  */
+
+/**
+ * @api {post} /users/signup Sign Up New User
+ * @apiName SignUp
+ * @apiGroup User
+ *
+ * @apiBody {Object} user
+ * @apiBody  {String} user.email Email of the User.
+ * @apiBody  {String} user.firstName First name of the User.
+ * @apiBody  {String} user.lastName Last name of the User.
+ * @apiBody  {String} user.password Password of the User.
+ *
+ * @apiBody {Object} borrower
+ * @apiBody {String} borrower.contactNumber
+ *
+ * @apiUse UserSuccess
+ * @apiUse ValidationError
+ * @apiUse BadRequestError
+ */
+router.route('/signup').post(userController.signup);
 
 router
   .route('/me')
