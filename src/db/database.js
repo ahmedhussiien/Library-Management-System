@@ -51,6 +51,10 @@ async function checkDatabaseConnection(sequelize) {
   }
 }
 
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 async function initSequelizeModels(sequelize) {
   const modelsConstructors = [
     createUserModel,
@@ -65,7 +69,7 @@ async function initSequelizeModels(sequelize) {
   // create models
   modelsConstructors.forEach((modelConstructor) => {
     const model = modelConstructor(sequelize, DataTypes);
-    models[model.name] = model;
+    models[capitalize(model.name)] = model;
   });
 
   // set associations

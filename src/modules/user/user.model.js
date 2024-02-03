@@ -9,7 +9,7 @@ import { userRoles } from './user.enum.js';
  */
 function createUserModel(sequelize, DataTypes) {
   const User = sequelize.define(
-    'User',
+    'user',
     {
       id: {
         type: DataTypes.INTEGER,

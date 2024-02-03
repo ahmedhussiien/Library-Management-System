@@ -7,7 +7,7 @@
  */
 function createBookModel(sequelize, DataTypes) {
   const Book = sequelize.define(
-    'Book',
+    'book',
     {
       id: {
         type: DataTypes.INTEGER,

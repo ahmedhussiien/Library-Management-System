@@ -7,7 +7,7 @@
  */
 function createBorrowerModel(sequelize, DataTypes) {
   const Borrower = sequelize.define(
-    'Borrower',
+    'borrower',
     {
       id: {
         type: DataTypes.INTEGER,

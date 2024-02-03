@@ -7,7 +7,7 @@
  */
 function createBookAuthorModel(sequelize, DataTypes) {
   const BookAuthor = sequelize.define(
-    'BookAuthor',
+    'bookAuthor',
     {
       id: {
         type: DataTypes.INTEGER,

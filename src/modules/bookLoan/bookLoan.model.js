@@ -7,7 +7,7 @@
  */
 function createBookLoanModel(sequelize, DataTypes) {
   const BookLoan = sequelize.define(
-    'BookLoan',
+    'bookLoan',
     {
       id: {
         type: DataTypes.INTEGER,
