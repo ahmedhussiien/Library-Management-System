@@ -107,4 +107,7 @@ async function seedDataBase() {
   });
 }
 
-seedDataBase().then(() => console.log('Seeding database finished!'));
+seedDataBase().then(() => {
+  console.log('Seeding database finished!');
+  process.exit();
+});
