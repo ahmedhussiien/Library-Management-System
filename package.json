@@ -9,7 +9,8 @@
     "start:dev": "nodemon src/server.js",
     "seed": "node src/seeder.js",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "docs:generate": "apidoc -i src -o ./src/docs"
   },
   "repository": {
     "type": "git",
