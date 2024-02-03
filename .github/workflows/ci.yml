@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+    IMAGE_NAME: library-management-api
+
+jobs:
+  build_publish:
+    name: Build & Publish
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Login to GitHub Container Registry
+      shell: bash
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
+    - name: Build Docker Image
+      run: docker build -t temp-image .
+      
+    - name: Construct Tags
+      id: tags
+      run: |
+        sha_short=$(echo ${{ inputs.commit-sha }} | head -c 7 )
+
+        image_latest_tag=ghcr.io/${{ github.repository_owner }}/${{env.IMAGE_NAME}}:latest
+        image_commit_tag=ghcr.io/${{ github.repository_owner }}/${{env.IMAGE_NAME}}:${sha_short}
+
+        echo "::set-output name=image_latest_tag::${image_latest_tag}"
+        echo "::set-output name=image_commit_tag::${image_commit_tag}"
+
+    - name: Tag Docker Images
+      shell: bash
+      run: |
+        docker tag temp-image ${{ steps.tags.outputs.image_latest_tag }}
+        docker tag temp-image ${{ steps.tags.outputs.image_commit_tag }}
+
+    - name: Push Docker Images
+      run: |
+        docker image push ${{ steps.tags.outputs.image_latest_tag }}
+        docker image push ${{ steps.tags.outputs.image_commit_tag }}
