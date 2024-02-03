@@ -10,6 +10,7 @@ import v1Routes from './routes/v1.js';
 import errorController from './middlewares/error.controller.js';
 
 import { healthRoute } from './modules/health/index.js';
+import NotFoundError from './utils/exceptions/notFoundError.js';
 
 const app = express();
 
@@ -20,10 +21,10 @@ app.disable('x-powered-by');
 app.use(helmet());
 
 // parse json request body
-app.use(express.json());
+app.use(express.json({ limit: '5kb' }));
 
 // parse urlencoded request body
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '5kb' }));
 
 // parse cookies
 app.use(cookieParser());
@@ -40,6 +41,9 @@ app.use('/health', healthRoute);
 
 // v1 routes
 app.use('/v1', v1Routes);
+
+// handle 404 not found error
+app.use(async (req, res, next) => next(new NotFoundError('_RouteNotFound')));
 
 // catch all errors
 app.use(errorController);
