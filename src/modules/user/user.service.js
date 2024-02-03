@@ -60,10 +60,11 @@ async function findOne(id) {
 async function findOneIncludePassword(email) {
   if (!email) throw new BadRequestError('_ProvideEmail');
 
-  const user = User.scope('withPassword').findOne({
+  const user = await User.scope('withPassword').findOne({
     where: { email },
     include: [Borrower],
   });
+
   if (!user) throw new NotFoundError('_UserNotfound');
 
   return user;
@@ -143,10 +144,25 @@ async function updateOneByStaff(id, data) {
 async function deleteOne(id) {
   if (!id) throw new BadRequestError('_ProvideId');
 
-  const user = await User.destroy({ where: { id } });
-  if (!user) throw new NotFoundError('_UserNotfound');
+  const user = await sequelize.transaction(async (t) => {
+    const user = await User.findOne({ where: { id }, transaction: t });
+    if (!user) throw new NotFoundError('_UserNotfound');
+    if (user.isDeleted) throw new BadRequestError('_UserAlreadyDeleted');
 
-  // TODO: delete borrower entity
+    let isUserRoleDeleted = true;
+
+    if (user.role === userRoles.BORROWER) {
+      const borrower = await borrowerService.findOneByUserId(user.id);
+      isUserRoleDeleted = await borrowerService.deleteOne(borrower.id, t);
+    }
+
+    if (isUserRoleDeleted) {
+      return user.destroy({ transaction: t });
+    } else {
+      user.isDeleted = true;
+      return user.save({ transaction: t });
+    }
+  });
 
   return user;
 }

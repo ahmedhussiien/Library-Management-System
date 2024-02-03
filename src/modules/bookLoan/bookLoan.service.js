@@ -25,6 +25,13 @@ async function findAllBorrowerLoans(query, borrowerId) {
   return result;
 }
 
+async function getBorrowerNumLoans(borrowerId, transaction) {
+  return BookLoan.count({
+    where: { borrowerId },
+    transaction,
+  });
+}
+
 async function findAllActiveBorrowerLoans(query, borrowerId) {
   // set pagination
   const { limit, offset, page } = getPaginationInfo(query.page, query.limit);
@@ -39,6 +46,13 @@ async function findAllActiveBorrowerLoans(query, borrowerId) {
   // format response
   const result = getPagingData(data, page, limit);
   return result;
+}
+
+async function getBorrowerNumActiveLoans(borrowerId, transaction) {
+  return BookLoan.count({
+    where: { borrowerId, checkInDate: null },
+    transaction,
+  });
 }
 
 async function findOne(id, borrowerId) {
@@ -116,6 +130,8 @@ async function checkIn(id, borrowerId) {
 export {
   findAllBorrowerLoans,
   findAllActiveBorrowerLoans,
+  getBorrowerNumActiveLoans,
+  getBorrowerNumLoans,
   findOne,
   createOne,
   checkIn,

@@ -22,6 +22,7 @@ async function login(email, password) {
 
   // check if active
   if (!user.isActive) throw new UnauthorizedError('_UserSuspended');
+  if (user.isDeleted) throw new UnauthorizedError('_UserDeleted');
 
   // generate access token
   const accessToken = getAccessToken(user);

@@ -32,6 +32,11 @@ function createUserModel(sequelize, DataTypes) {
         allowNull: false,
         defaultValue: true,
       },
+      isDeleted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
       firstName: {
         type: DataTypes.STRING,
         allowNull: false,

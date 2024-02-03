@@ -6,6 +6,8 @@ import NotFoundError from '../../utils/exceptions/notFoundError.js';
 import BadRequestError from '../../utils/exceptions/badRequestError.js';
 import { userRoles } from '../user/user.enum.js';
 
+import * as bookLoanService from '../bookLoan/bookLoan.service.js';
+
 import {
   getPaginationInfo,
   getPagingData,
@@ -17,8 +19,7 @@ async function findAll(query) {
   // set pagination
   const { limit, offset, page } = getPaginationInfo(query.page, query.limit);
 
-  const data = await User.findAndCountAll({
-    where: { role: userRoles.BORROWER },
+  const data = await Borrower.findAndCountAll({
     include: [User],
     limit,
     offset,
@@ -32,14 +33,24 @@ async function findAll(query) {
 async function findOne(id) {
   if (!id) throw new BadRequestError('_ProvideId');
 
-  const user = await User.findOne({
-    where: { id, role: userRoles.BORROWER },
+  const borrower = await Borrower.findOne({
+    where: { id },
     include: [User],
   });
 
-  if (!user) throw new NotFoundError('_UserNotfound');
+  if (!borrower) throw new NotFoundError('_BorrowerNotfound');
+  return borrower;
+}
 
-  return user;
+async function findOneByUserId(userId) {
+  if (!userId) throw new BadRequestError('_ProvideId');
+
+  const borrower = await Borrower.findOne({
+    where: { userId },
+  });
+
+  if (!borrower) throw new NotFoundError('_BorrowerNotfound');
+  return borrower;
 }
 
 async function createOne(data, transaction) {
@@ -58,17 +69,31 @@ async function updateOneByUserId(userId, data, transaction) {
   return borrower.save({ transaction });
 }
 
-async function deleteOne(id) {
+async function deleteOne(id, transaction) {
   if (!id) throw new BadRequestError('_ProvideId');
 
-  // TODO: check if borrower has active loans: throw an error
+  // check if borrower has active loans -> throw an error
+  const numActiveLoans = await bookLoanService.getBorrowerNumActiveLoans(
+    id,
+    transaction,
+  );
 
-  // TODO: check if borrower has any loans: soft delete
+  if (numActiveLoans) throw new BadRequestError('_BorrowerHasActiveLoans');
 
-  const borrower = await Borrower.destroy({ where: { id } });
+  // check if borrower has any loans -> soft delete
+  const numLoans = await bookLoanService.getBorrowerNumLoans(id, transaction);
+  if (numLoans) return false;
+
+  const borrower = await Borrower.destroy({ where: { id }, transaction });
   if (!borrower) throw new NotFoundError('_BorrowerNotfound');
-
-  return borrower;
+  return true;
 }
 
-export { findAll, findOne, createOne, deleteOne, updateOneByUserId };
+export {
+  findAll,
+  findOne,
+  findOneByUserId,
+  createOne,
+  deleteOne,
+  updateOneByUserId,
+};
