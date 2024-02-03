@@ -11,6 +11,10 @@ const NUM_BOOKS = 2000;
 const NUM_USERS = 200;
 const NUM_LOANS = 100;
 
+const STAFF_USER_EMAIL = 'staff@test.com';
+const BORROWER_USER_EMAIL = 'borrower@test.com';
+const USER_PASSWORD = '12345678';
+
 /** Fake Data Generators */
 function generateAuthorData() {
   return { name: faker.person.fullName() };
@@ -67,10 +71,21 @@ async function seedDataBase() {
     await bookService.createOne(bookData);
   }
 
-  // add users
+  // add borrower user
   let userData;
   let borrowerData;
-  for (var i = 0; i < NUM_USERS; i++) {
+  userData = {
+    email: BORROWER_USER_EMAIL,
+    password: USER_PASSWORD,
+    firstName: 'Borrower',
+    lastName: 'Test',
+  };
+
+  borrowerData = generateBorrowerData();
+  await userService.signup({ user: userData, borrower: borrowerData });
+
+  // add users
+  for (var i = 1; i < NUM_USERS; i++) {
     userData = generateUserData();
     borrowerData = generateBorrowerData();
     await userService.signup({ user: userData, borrower: borrowerData });
@@ -85,8 +100,8 @@ async function seedDataBase() {
 
   // add staff user
   await userService.createStaffUser({
-    email: 'staff@test.com',
-    password: '12345678',
+    email: STAFF_USER_EMAIL,
+    password: USER_PASSWORD,
     firstName: 'staff',
     lastName: 'test',
   });
