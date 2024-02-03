@@ -35,7 +35,7 @@ const router = express.Router();
  */
 
 /**
- * @api {post} /users/signup Sign up a new User
+ * @api {post} /v1/users/signup Sign up a new User
  * @apiName SignUp
  * @apiGroup User
  *
@@ -57,7 +57,7 @@ router.route('/signup').post(userController.signup);
 router
   .route('/me')
   /**
-   * @api {get} /users/me Get Current User data
+   * @api {get} /v1/users/me Get Current User data
    * @apiName GetMe
    * @apiGroup User
    *
@@ -67,7 +67,7 @@ router
   .get(protect, userController.getMe)
 
   /**
-   * @api {patch} /users/me Update Current User data
+   * @api {patch} /v1/users/me Update Current User data
    * @apiName UpdateMe
    * @apiGroup User
    *
@@ -90,7 +90,7 @@ router
 router
   .route('/:userId')
   /**
-   * @api {get} /users/:id Get User data
+   * @api {get} /v1/users/:id Get User data
    * @apiParam {Number} id Users unique ID.
    * @apiName GetUser
    * @apiGroup User
@@ -103,7 +103,7 @@ router
   .get(protect, restrictTo(userRoles.STAFF), userController.getOne)
 
   /**
-   * @api {patch} /users/:id Update User data
+   * @api {patch} /v1/users/:id Update User data
    * @apiParam {Number} id Users unique ID.
    * @apiName UpdateUser
    * @apiGroup User
@@ -127,7 +127,7 @@ router
   .patch(protect, restrictTo(userRoles.STAFF), userController.updateOne)
 
   /**
-   * @api {delete} /users/:id Delete user
+   * @api {delete} /v1/users/:id Delete user
    * @apiParam {Number} id Users unique ID.
    * @apiName DeleteUser
    * @apiGroup User

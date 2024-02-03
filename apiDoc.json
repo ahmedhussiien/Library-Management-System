@@ -3,5 +3,5 @@
     "version": "0.1.0",
     "description": "A simple library management system API.",
     "title": "Library Management System",
-    "url": "http://localhost:3000/v1"
+    "url": "http://localhost:3000"
 }

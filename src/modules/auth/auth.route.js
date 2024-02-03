@@ -4,11 +4,10 @@ import * as authController from './auth.controller.js';
 const router = express.Router();
 
 /**
- * @api {post} /auth/login Login user
+ * @api {post} /v1/auth/login Login user
  * @apiName Login
  * @apiGroup Auth
  *
- * @apiBody {Object} user
  * @apiBody  {String} email Email of the User.
  * @apiBody  {String} password Password of the User.
  *
@@ -19,7 +18,7 @@ const router = express.Router();
 router.route('/login').post(authController.login);
 
 /**
- * @api {post} /auth/logout Logout user
+ * @api {post} /v1/auth/logout Logout user
  * @apiName Logout
  * @apiGroup Auth
  *

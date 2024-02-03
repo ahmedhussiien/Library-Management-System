@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(protect, restrictTo(userRoles.STAFF));
 
 /**
- * @api {get} /borrowers Get all Borrowers data
+ * @api {get} /v1/borrowers Get all Borrowers data
  * @apiName GetAllBorrowers
  * @apiGroup Borrower
  *
@@ -68,7 +68,7 @@ router.use(protect, restrictTo(userRoles.STAFF));
 router.route('/').get(borrowerController.getAll);
 
 /**
- * @api {get} /borrowers/:id Get Borrower data
+ * @api {get} /v1/borrowers/:id Get Borrower data
  * @apiName GetBorrower
  * @apiGroup Borrower
  * @apiParam {Number} id Borrower unique ID.

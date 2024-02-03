@@ -4,7 +4,7 @@ import AppError from './appError.js';
 /**
  * @apiDefine UnauthenticatedError
  *
- * @apiError UnauthenticatedError The request doesn't contain the user's credential.
+ * @apiError UnauthenticatedError User credentials are missing or invalid.
  *
  * @apiErrorExample UnauthenticatedError-Response:
  *     HTTP/1.1 401 Unauthorized
