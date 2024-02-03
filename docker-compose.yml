@@ -11,6 +11,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     expose:
       - '${DB_PORT}'
+    ports:
+      - '${DB_PORT}:${DB_PORT}' 
     volumes:
       - db-data:/var/lib/mysql
 

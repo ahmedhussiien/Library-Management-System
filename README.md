@@ -84,20 +84,15 @@ The database schema is open for extensibility by adding reviews, reservations, a
 ### Running The API
 
 1. Rename the `.env.example` file to `.env`.
-2. Run the Docker compose command below which will set up a database, seed it, and run the API server after that. You can remove the `seed-db` service to use the API on your own.
+2. Run the `docker-compose up` command which will set up a database, seed it, and run the API server after that.
 
-   ```bash
-   docker-compose up
-   ```
+   - You can remove the `seed-db` service to use the API on your own.
+   - All seeds users have the same password: `123456789`
 
    | User              | Roles    |
    | ----------------- | -------- |
    | borrower@test.com | borrower |
    | staff@test.com    | staff    |
-
-<aside>
-💡 All seeds users have the same password: `123456789`
-</aside>
 
 ### Access The API Documentation
 
@@ -136,9 +131,9 @@ You can access the API docs at this local URL: http://localhost:3000/docs/
     ├───routes
     ├───utils
     │   └───exceptions
-	├─── logger.js
-	├─── config.js
-	├─── seeder.js
-	├─── app.js
+    ├─── logger.js
+    ├─── config.js
+    ├─── seeder.js
+    ├─── app.js
     └─── server.js
 ```
