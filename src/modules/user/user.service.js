@@ -44,6 +44,21 @@ async function signup(data) {
   return { user, borrower };
 }
 
+async function createStaffUser(data) {
+  const hashedPassword = await hashPassword(data.password);
+
+  const user = await User.create({
+    email: data.email,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    role: userRoles.STAFF,
+    password: hashedPassword,
+  });
+
+  user.password = undefined; // do not return the password
+  return user;
+}
+
 async function hashPassword(password) {
   return hash(password, Config.PASSWORD_HASH_SALT_ROUNDS);
 }
@@ -174,4 +189,5 @@ export {
   deleteOne,
   updateOneByStaff,
   findOneIncludePassword,
+  createStaffUser,
 };
