@@ -6,6 +6,7 @@ const { assign, omit } = _;
 import db from '../db/database.js';
 import NotFoundError from '../utils/exceptions/notFoundError.js';
 import BadRequestError from '../utils/exceptions/badRequestError.js';
+
 import { getPaginationInfo, getPagingData } from '../utils/paginationHelper.js';
 
 const { Book, BookAuthor } = db;
@@ -56,6 +57,8 @@ async function createOne(data) {
 
 async function deleteOne(id) {
   if (!id) throw new BadRequestError('_ProvideId');
+
+  // TODO: check if book has loans: soft delete.
 
   const book = await Book.destroy({ where: { id } });
   if (!book) throw new NotFoundError('_BookNotfound');

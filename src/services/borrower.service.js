@@ -3,6 +3,9 @@ const { assign, pick } = _;
 
 import db from '../db/database.js';
 import userRoles from '../db/enums/userRoles.js';
+import NotFoundError from '../utils/exceptions/notFoundError.js';
+import BadRequestError from '../utils/exceptions/badRequestError.js';
+
 import { getPaginationInfo, getPagingData } from '../utils/paginationHelper.js';
 
 const { User } = db;

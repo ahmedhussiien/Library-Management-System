@@ -7,6 +7,9 @@ import db from '../db/database.js';
 import Config from '../config.js';
 import userRoles from '../db/enums/userRoles.js';
 
+import NotFoundError from '../utils/exceptions/notFoundError.js';
+import BadRequestError from '../utils/exceptions/badRequestError.js';
+
 const { User } = db;
 
 async function signup(data) {

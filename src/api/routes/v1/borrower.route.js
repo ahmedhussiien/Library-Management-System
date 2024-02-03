@@ -8,7 +8,9 @@ import userRoles from '../../../db/enums/userRoles.js';
 
 const router = express.Router();
 
-router.route('/').get(borrowerController.getAll);
+router
+  .route('/')
+  .get(protect, restrictTo(userRoles.SUPERVISOR), borrowerController.getAll);
 
 router
   .route('/:borrowerId')
