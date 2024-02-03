@@ -39,7 +39,7 @@ function createBookLoanModel(sequelize, DataTypes) {
         },
       },
       checkOutDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
         validate: {
           isDate: true,
@@ -47,14 +47,13 @@ function createBookLoanModel(sequelize, DataTypes) {
         },
       },
       checkInDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
+        type: DataTypes.DATEONLY,
         validate: {
           isDate: true,
         },
       },
       dueDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
         validate: {
           isDate: true,
