@@ -7,8 +7,4 @@ export default class NotFoundError extends AppError {
   constructor(message) {
     super(message);
   }
-
-  serializeErrors() {
-    return [{ message: this.message }];
-  }
 }

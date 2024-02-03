@@ -7,7 +7,7 @@ export default class AppError extends Error {
   }
 
   serializeErrors() {
-    return [{ message: this.message }];
+    return { message: this.message };
   }
 
   get status() {
